@@ -1,13 +1,12 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { connect } from 'react-redux';
 import {
   doc,
   getDoc,
   onSnapshot,
-  addDoc,
-  collection,
   updateDoc,
   setDoc,
+  deleteDoc,
 } from '@firebase/firestore';
 import { nanoid } from 'nanoid';
 import { firestore } from '../lib/firebase';
@@ -24,7 +23,7 @@ const GameStats = ({
   playerSign,
 }) => {
   const [inputID, setInputID] = useState('');
-  let unsub;
+  let unsub = useRef();
   const createGame = async () => {
     setSquares(Array(9).fill(null));
     const id = nanoid(4);
@@ -32,9 +31,6 @@ const GameStats = ({
       squares,
     });
     setGameID(id);
-    unsub = onSnapshot(doc(firestore, 'room', id), (doc) => {
-      setSquares(doc.data().squares);
-    });
   };
 
   const joinGame = async () => {
@@ -42,9 +38,6 @@ const GameStats = ({
     const docRef = doc(firestore, 'room', inputID);
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      unsub = onSnapshot(doc(firestore, 'room', inputID), (doc) => {
-        setSquares(doc.data().squares);
-      });
       setPlayerSign('O');
       setGameID(inputID);
     } else {
@@ -64,7 +57,17 @@ const GameStats = ({
         });
       })();
     }
-  }, [squares, gameID]);
+  }, [squares]);
+
+  useEffect(() => {
+    if (gameID) {
+      unsub.current = onSnapshot(doc(firestore, 'room', gameID), (doc) => {
+        setSquares(doc.data().squares);
+      });
+    }
+
+    return unsub.current;
+  }, [gameID]);
 
   return (
     <div className="button-group">
