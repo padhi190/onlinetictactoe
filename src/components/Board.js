@@ -27,7 +27,7 @@ const Board = ({ squares, playerSign, updateSquares, gameID }) => {
   let status = calculateStatus(winner, squares, nextValue);
 
   return (
-    <div className="board">
+    <div className="col-lg-4 py-5 mx-auto">
       <div className="status">{status}</div>
       <div className="board-row">
         {renderSquare(0)}

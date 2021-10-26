@@ -70,17 +70,26 @@ const GameStats = ({
   }, [gameID]);
 
   return (
-    <div className="button-group">
+    <div className="button-group col-lg-4 py-5">
       <p>You Play: {playerSign}</p>
-      <button onClick={createGame}>Create</button>
+      <button type="button" className="btn btn-primary" onClick={createGame}>
+        Create
+      </button>
       <input
         type="text"
         value={inputID}
         onChange={(e) => setInputID(e.target.value)}
         placeholder="enter ID to join"
       />
-      <button onClick={joinGame}>Join</button>
-      <button onClick={resetGame} disabled={!calculateWinner(squares)}>
+      <button type="button" className="btn btn-success" onClick={joinGame}>
+        Join
+      </button>
+      <button
+        type="button"
+        className="btn btn-danger"
+        onClick={resetGame}
+        disabled={!calculateWinner(squares)}
+      >
         Reset
       </button>
       <p>{gameID ? `ID: ${gameID}` : null}</p>

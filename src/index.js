@@ -10,9 +10,12 @@ import GameStats from './components/GameStats';
 const Game = () => {
   return (
     <Provider store={store}>
-      <div className="game-board">
-        <Board />
-        <GameStats />
+      <div className="game-board container">
+        <div className="row">
+          <Board />
+          <GameStats />
+          <div className="col-lg-4"></div>
+        </div>
       </div>
     </Provider>
   );
